@@ -1,4 +1,3 @@
-#include <cstring>
 #include "iostream"
 #include "vector"
 
@@ -7,12 +6,12 @@ using namespace std;
 #define hang 10
 #define lie 8
 
-const int map[lie][hang] = {{0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 1, 1, 1, 1, 1},
-                            {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+const int map[lie][hang] = {{1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+                            {1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+                            {1, 1, 0, 0, 0, 1, 1, 0, 0, 0},
+                            {0, 0, 0, 1, 0, 1, 1, 1, 1, 1},
+                            {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
+                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},};
 
@@ -36,7 +35,6 @@ vector<treeNode *>::iterator itMin;
 
 treeNode *createTree(int lienum, int hangnum) {
     auto *pNew = new treeNode;
-    memset(pNew, 0, sizeof(treeNode));
     pNew->pos.lienum = lienum;
     pNew->pos.hangnum = hangnum;
     return pNew;
@@ -54,7 +52,7 @@ int getH(point start, point end) {
 
 int main() {
     bool find = false;
-    bool pathMap[lie][hang] = {false};
+    bool pathMap[lie][hang];
     point start{1, 1};
     point end{6, 8};
     treeNode *pRoot = createTree(start.lienum, start.hangnum);
