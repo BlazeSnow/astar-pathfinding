@@ -103,8 +103,10 @@ int main() {
             }
             //G的值加1
             pChild->pos.g++;
-            //如果没障碍并且没找过
-            if (map[pChild->pos.lienum][pChild->pos.hangnum] != 1 &&
+            //如果没越界，没障碍并且没找过
+            if (pChild->pos.lienum >= 0 && pChild->pos.lienum <= lie &&
+                pChild->pos.hangnum >= 0 && pChild->pos.hangnum <= hang &&
+                map[pChild->pos.lienum][pChild->pos.hangnum] != 1 &&
                 pathMap[pChild->pos.lienum][pChild->pos.hangnum] != 1) {
                 //标记为已找过
                 pathMap[pChild->pos.lienum][pChild->pos.hangnum] = 1;
@@ -137,7 +139,7 @@ int main() {
         }
         //如果找了超过地图的数量
         if (times > hang * lie * 4) {
-            cout << "找了超过" << hang * lie << "次" << endl;
+            cout << "找了超过" << hang * lie * 4 << "次" << endl;
             break;
         }
     }
