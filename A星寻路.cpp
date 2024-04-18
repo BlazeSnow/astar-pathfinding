@@ -8,7 +8,7 @@ using namespace std;
 #define lie 8
 
 //地图信息
-const int map[lie][hang] = {{1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+const int map[lie][hang] = {{1, 1, 0, 0, 0, 1, 0, 0, 0, 0},
                             {1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
                             {1, 1, 0, 1, 0, 1, 1, 0, 0, 0},
                             {1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
@@ -65,6 +65,8 @@ int main() {
     bool find = false;
     //是否找过
     int pathMap[lie][hang] = {0};
+    //找了几次
+    int times = 0;
     //起点
     point start{1, 1};
     //终点
@@ -115,6 +117,7 @@ int main() {
                 //写入待处理列表
                 list.push_back(pChild);
             }
+            times++;
         }
         //处理列表
         auto imin = list.begin();
@@ -126,14 +129,15 @@ int main() {
         //列表中F最小的作为下一个起点
         pCurrent = *imin;
         //抹掉最小的
-        list.erase(imin);
+        list.clear();
         //如果到达了终点
         if (end.lienum == pCurrent->pos.lienum && end.hangnum == pCurrent->pos.hangnum) {
             find = true;
             break;
         }
-        //如果列表就没有值（第一个点四周都是障碍物）
-        if (list.empty()) {
+        //如果找了超过地图的数量
+        if (times > hang * lie) {
+            cout << "找了超过" << hang * lie << "次" << endl;
             break;
         }
     }
