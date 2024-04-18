@@ -129,14 +129,14 @@ int main() {
         //列表中F最小的作为下一个起点
         pCurrent = *imin;
         //抹掉最小的
-        list.clear();
+        list.erase(imin);
         //如果到达了终点
         if (end.lienum == pCurrent->pos.lienum && end.hangnum == pCurrent->pos.hangnum) {
             find = true;
             break;
         }
         //如果找了超过地图的数量
-        if (times > hang * lie) {
+        if (times > hang * lie * 4) {
             cout << "找了超过" << hang * lie << "次" << endl;
             break;
         }
