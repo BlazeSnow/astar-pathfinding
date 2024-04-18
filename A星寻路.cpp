@@ -1,124 +1,152 @@
 #include "iostream"
 #include "vector"
+#include "cstring"
 
 using namespace std;
 
 #define hang 10
 #define lie 8
 
+//地图信息
 const int map[lie][hang] = {{1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
                             {1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                            {1, 1, 0, 0, 0, 1, 1, 0, 0, 0},
-                            {0, 0, 0, 1, 0, 1, 1, 1, 1, 1},
+                            {1, 1, 0, 1, 0, 1, 1, 0, 0, 0},
+                            {1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
                             {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
-                            {0, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+                            {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                             {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},};
 
+//位置信息
 struct point {
-    int lienum;//列位置
-    int hangnum;//行位置
-    int f;//总代价
-    int g;//移动代价
-    int h;//估算代价
+    //列位置
+    int lienum;
+    //行位置
+    int hangnum;
+    //总代价
+    int f;
+    //移动代价
+    int g;
+    //估算代价
+    int h;
 };
 
-struct treeNode {
-    point pos{};
-    vector<treeNode *> child;
-    treeNode *parent{};
+//结构体A
+struct A {
+    //位置信息
+    point pos;
+    //A的父
+    A *parent;
 };
 
-vector<treeNode *> buff;
-vector<treeNode *>::iterator it;
-vector<treeNode *>::iterator itMin;
-
-treeNode *createTree(int lienum, int hangnum) {
-    auto *pNew = new treeNode;
-    pNew->pos.lienum = lienum;
-    pNew->pos.hangnum = hangnum;
-    return pNew;
-}
-
+//方向字典
 enum direction {
     you, zuo, shang, xia
 };
 
-int getH(point start, point end) {
+//计算某点的H值
+int getH(const point start, const point end) {
     int temphang = abs(start.hangnum - end.hangnum);
     int templie = abs(start.lienum - end.lienum);
     return temphang + templie;
 }
 
+//将A*指针扩容
+A *newA(const int lienum, const int hangnum) {
+    A *p = new A;
+    memset(p, 0, sizeof(A));
+    p->pos.lienum = lienum;
+    p->pos.hangnum = hangnum;
+    return p;
+}
+
 int main() {
+    //是否找到
     bool find = false;
-    bool pathMap[lie][hang];
+    //是否找过
+    int pathMap[lie][hang] = {0};
+    //起点
     point start{1, 1};
+    //终点
     point end{6, 8};
-    treeNode *pRoot = createTree(start.lienum, start.hangnum);
-    pathMap[pRoot->pos.lienum][pRoot->pos.hangnum] = true;
-    treeNode *pCurrent = pRoot;
-    treeNode *pChild;
+    //开始位置的A
+    A *pCurrent = newA(start.lienum, start.hangnum);
+    //开始位置标记找过
+    pathMap[pCurrent->pos.lienum][pCurrent->pos.hangnum] = 1;
+    //队列存储A
+    vector<A *> list;
+    //主程序
     while (true) {
-        for (int i = 0; i < 4; ++i) {
-            pChild = createTree(pCurrent->pos.lienum, pCurrent->pos.hangnum);
+        for (int i = 0; i < 4; i++) {
+            //新建一个指针
+            A *pChild = newA(pCurrent->pos.lienum, pCurrent->pos.hangnum);
+            //保留G的值
+            pChild->pos.g = pCurrent->pos.g;
+            //根据四个方向调整坐标
             switch (i) {
                 case you:
                     pChild->pos.lienum++;
-                    pChild->pos.g++;
                     break;
                 case zuo:
                     pChild->pos.lienum--;
-                    pChild->pos.g++;
                     break;
                 case shang:
                     pChild->pos.hangnum--;
-                    pChild->pos.g++;
                     break;
                 case xia:
                     pChild->pos.hangnum++;
-                    pChild->pos.g++;
                     break;
                 default:
                     abort();
             }
-            if (map[pChild->pos.lienum][pChild->pos.hangnum] == 0 &&
-                !pathMap[pChild->pos.lienum][pChild->pos.hangnum]) {
+            //G的值加1
+            pChild->pos.g++;
+            //如果没障碍并且没找过
+            if (map[pChild->pos.lienum][pChild->pos.hangnum] != 1 &&
+                pathMap[pChild->pos.lienum][pChild->pos.hangnum] != 1) {
+                //标记为已找过
+                pathMap[pChild->pos.lienum][pChild->pos.hangnum] = 1;
+                //计算H的值
                 pChild->pos.h = getH(pChild->pos, end);
+                //计算F的值
                 pChild->pos.f = pChild->pos.h + pChild->pos.g;
-                pCurrent->child.push_back(pChild);
+                //标记父
                 pChild->parent = pCurrent;
-                buff.push_back(pChild);
-            } else {
-                delete pChild;
+                //写入待处理列表
+                list.push_back(pChild);
             }
         }
-        it = buff.begin();
-        itMin = buff.begin();
-        for (; it != buff.end(); it++) {
-            if ((*itMin)->pos.f > (*it)->pos.f) {
-                itMin = it;
+        //处理列表
+        auto imin = list.begin();
+        for (auto i = list.begin(); i != list.end(); i++) {
+            if ((*imin)->pos.f > (*i)->pos.f) {
+                imin = i;
             }
         }
-        pCurrent = *itMin;
-        pathMap[pCurrent->pos.lienum][pCurrent->pos.hangnum] = true;
-        buff.erase(itMin);
+        //列表中F最小的作为下一个起点
+        pCurrent = *imin;
+        //抹掉最小的
+        list.erase(imin);
+        //如果到达了终点
         if (end.lienum == pCurrent->pos.lienum && end.hangnum == pCurrent->pos.hangnum) {
             find = true;
             break;
         }
-        if (buff.empty()) {
+        //如果列表就没有值（第一个点四周都是障碍物）
+        if (list.empty()) {
             break;
         }
     }
-    if (!find) {
-        cout << "没找到终点" << endl;
-    } else {
+    //如果找到了
+    if (find) {
         cout << "找到终点了" << endl;
+        cout << "从后往前为：" << endl;
         while (pCurrent) {
-            cout << "(" << pCurrent->pos.hangnum << "," << pCurrent->pos.lienum << ")" << endl;
+            cout << "(" << pCurrent->pos.hangnum << "," << pCurrent->pos.lienum << ") ";
             pCurrent = pCurrent->parent;
         }
+    } else {
+        cout << "没找到终点" << endl;
     }
     return 0;
 }
