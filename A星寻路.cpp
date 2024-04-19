@@ -2,22 +2,13 @@
 #include "vector"
 #include "cstring"
 #include "stack"
+#include "fstream"
+#include "filesystem"
 
 using namespace std;
 //地图大小
 #define hang 10
 #define lie 8
-
-//地图信息
-const int map[lie][hang] = {{1, 1, 0, 0, 0, 1, 0, 0, 0, 0},
-                            {1, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                            {1, 1, 0, 1, 0, 1, 1, 0, 0, 0},
-                            {1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
-                            {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
-                            {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                            {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},};
-
 
 //结构体A
 class A {
@@ -34,6 +25,87 @@ public:
     int h;
     //A的父
     A *parent;
+};
+
+//地图类
+class MAP {
+public:
+    //地图存放
+    int map[lie][hang] = {0};
+    //起点
+    A start{1, 1};
+    //终点
+    A end{6, 8};
+
+    //输入地图，返回1则读取完地图，返回0终止整个程序
+    int inputMap() {
+        //判断输入或者输出文件
+        int in_or_out = -1;
+        cout << "需要读取地图文件(1)或生成全新的地图文件(0)：" << endl;
+        cin >> in_or_out;
+        //读取地图文件
+        if (in_or_out == 1) {
+            fstream file("map.txt", ios::in);
+            if (file.is_open()) {
+                //读取
+                for (int i = 0; i < lie; i++) {
+                    for (int j = 0; j < hang; j++) {
+                        file >> map[i][j];
+                        //录入起点
+                        if (map[i][j] == 2) {
+                            start.lienum = i;
+                            start.hangnum = j;
+                        } //录入终点
+                        else if (map[i][j] == 3) {
+                            end.lienum = i;
+                            end.hangnum = j;
+                        }
+                    }
+                }
+                file.close();
+                cout << "文件读取成功" << endl;
+                return 1;
+            } else {
+                std::filesystem::path path = std::filesystem::current_path();
+                cout << "ERROR:文件打开失败，目录为：" << path << endl;
+                return 0;
+            }
+        } //输出地图文件
+        else if (in_or_out == 0) {
+            fstream file("map.txt", ios::out);
+            if (file.is_open()) {
+                //输出地图
+                for (const auto &i: templateMap) {
+                    for (int j: i) {
+                        file << j << " ";
+                    }
+                    file << endl;
+                }
+                //输出路径
+                std::filesystem::path path = std::filesystem::current_path();
+                file.close();
+                cout << "文件map.txt创建成功，目录为：" << path << endl;
+                return 0;
+            } else {
+                std::filesystem::path path = std::filesystem::current_path();
+                cout << "ERROR:文件创建失败，目录为：" << path << endl;
+                return 0;
+            }
+        } else {
+            cout << "ERROR:输入不合法，请重新开始程序" << endl;
+            return 0;
+        }
+    };
+private:
+    //地图信息
+    const int templateMap[lie][hang] = {{1, 1, 0, 0, 0, 1, 0, 0, 0, 0},
+                                        {1, 2, 0, 0, 0, 1, 0, 0, 0, 0},
+                                        {1, 1, 0, 1, 0, 1, 1, 0, 0, 0},
+                                        {1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
+                                        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
+                                        {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+                                        {0, 0, 0, 0, 0, 0, 0, 0, 3, 0},
+                                        {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},};
 };
 
 //计算某点的H值
@@ -58,18 +130,20 @@ A *newA(const int lienum, const int hangnum) {
 }
 
 int main() {
+    //引入地图类
+    MAP map;
+    //如果地图类主程序返回0代表程序结束
+    if (map.inputMap() == 0) {
+        return 0;
+    }
     //是否找到
     bool find = false;
     //是否找过
     int pathMap[lie][hang] = {0};
     //找了几次
     int times = 0;
-    //起点
-    A start{1, 1};
-    //终点
-    A end{6, 8};
     //开始位置的A
-    A *pCurrent = newA(start.lienum, start.hangnum);
+    A *pCurrent = newA(map.start.lienum, map.start.hangnum);
     //开始位置标记找过
     pathMap[pCurrent->lienum][pCurrent->hangnum] = 1;
     //队列存储A
@@ -102,11 +176,11 @@ int main() {
             pChild->g++;
             //如果没越界，没障碍并且没找过
             if (pChild->lienum >= 0 && pChild->lienum <= lie && pChild->hangnum >= 0 && pChild->hangnum <= hang &&
-                map[pChild->lienum][pChild->hangnum] != 1 && pathMap[pChild->lienum][pChild->hangnum] != 1) {
+                map.map[pChild->lienum][pChild->hangnum] != 1 && pathMap[pChild->lienum][pChild->hangnum] != 1) {
                 //标记为已找过
                 pathMap[pChild->lienum][pChild->hangnum] = 1;
                 //计算H的值
-                pChild->h = getH(*pChild, end);
+                pChild->h = getH(*pChild, map.end);
                 //计算F的值
                 pChild->f = pChild->h + pChild->g;
                 //标记父
@@ -128,7 +202,7 @@ int main() {
         //抹掉最小的
         list.erase(imin);
         //如果到达了终点
-        if (end.lienum == pCurrent->lienum && end.hangnum == pCurrent->hangnum) {
+        if (map.end.lienum == pCurrent->lienum && map.end.hangnum == pCurrent->hangnum) {
             find = true;
             break;
         }
@@ -145,10 +219,13 @@ int main() {
         cout << "从前往后为：" << endl;
         //存放路径的栈
         stack<A *> show;
-        //输出路径到栈
+        //存放路径点的数组，用于地图输出
+        vector<A *> show_on_map;
+        //输出路径到栈和数组
         while (pCurrent) {
             auto temp = newA(pCurrent->hangnum, pCurrent->lienum);
             show.push(temp);
+            show_on_map.push_back(temp);
             pCurrent = pCurrent->parent;
         }
         delete pCurrent;
@@ -157,6 +234,25 @@ int main() {
             auto temp = show.top();
             show.pop();
             cout << "(" << temp->hangnum << "," << temp->lienum << ") ";
+        }
+        cout << endl;
+        //输出地图
+        for (int i = 0; i < lie; i++) {
+            for (int j = 0; j < hang; j++) {
+                //判断保存路径的数组中的点的位置
+                bool panduan = false;
+                for (auto k: show_on_map) {
+                    if (k->lienum == j && k->hangnum == i) {
+                        panduan = true;
+                    }
+                }
+                if (panduan) {
+                    cout << " a" << map.map[i][j] << " ";
+                } else {
+                    cout << "  " << map.map[i][j] << " ";
+                }
+            }
+            cout << endl;
         }
     } else {
         cout << "没找到终点" << endl;
