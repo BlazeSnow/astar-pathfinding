@@ -133,6 +133,9 @@ A *newA(const int lienum, const int hangnum) {
 }
 
 int main() {
+    cout << "Copyright (C) 2024 BlazeSnow.保留所有权利。" << endl;
+    cout << "本程序以GNU General Public License v3.0的条款发布。" << endl << endl;
+    cout << "https://github.com/BlazeSnow/astar-pathfinding" << endl << endl;
     //引入地图类
     MAP map;
     //如果地图类主程序返回0代表程序结束
