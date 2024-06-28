@@ -137,6 +137,7 @@ int main() {
     MAP map;
     //如果地图类主程序返回0代表程序结束
     if (map.inputMap() == 0) {
+        system("pause");
         return 0;
     }
     //是否找到
@@ -260,5 +261,6 @@ int main() {
     } else {
         cout << "没找到终点" << endl;
     }
+    system("pause");
     return 0;
 }
