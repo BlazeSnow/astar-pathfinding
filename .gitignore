@@ -1,7 +1,3 @@
 #clion
 .idea/
 cmake-build-debug/
-#vs
-.vs/
-out/
-CMakeSettings.json
