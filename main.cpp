@@ -1,5 +1,6 @@
-//Copyright (C) 2024 BlazeSnow. All Rights reserved.
-//This program is released under the terms of the GNU General Public License v3.0.
+//Copyright (C) 2024 BlazeSnow
+//保留所有权利
+//本程序以GNU General Public License v3.0的条款发布
 #include <iostream>
 #include <vector>
 #include <cstring>
@@ -43,7 +44,7 @@ public:
     int inputMap() {
         //判断输入或者输出文件
         int in_or_out = -1;
-        cout << "To read a map file(1) or create a new map file(0):" << endl;
+        cout << "需要读取地图文件(1)或生成全新的地图文件(0)：" << endl;
         cin >> in_or_out;
         //读取地图文件
         if (in_or_out == 1) {
@@ -65,11 +66,11 @@ public:
                     }
                 }
                 file.close();
-                cout << "File read success" << endl;
+                cout << "文件读取成功" << endl;
                 return 1;
             } else {
                 std::filesystem::path path = std::filesystem::current_path();
-                cout << "ERROR: Failed to open the file. The directory is:" << path << endl;
+                cout << "ERROR:文件打开失败，目录为：" << path << endl;
                 return 0;
             }
         } //输出地图文件
@@ -86,15 +87,15 @@ public:
                 //输出路径
                 std::filesystem::path path = std::filesystem::current_path();
                 file.close();
-                cout << "The file is created successfully. The directory is:" << path << endl;
+                cout << "文件map.txt创建成功，目录为：" << path << endl;
                 return 0;
             } else {
                 std::filesystem::path path = std::filesystem::current_path();
-                cout << "ERROR: The file failed to be created. The directory is:" << path << endl;
+                cout << "ERROR:文件创建失败，目录为：" << path << endl;
                 return 0;
             }
         } else {
-            cout << "ERROR: The input is invalid. Please restart the program" << endl;
+            cout << "ERROR:输入不合法，请重新开始程序" << endl;
             return 0;
         }
     };
@@ -132,8 +133,8 @@ A *newA(const int lienum, const int hangnum) {
 }
 
 int main() {
-    cout << "Copyright (C) 2024 BlazeSnow. All Rights reserved." << endl;
-    cout << "This program is released under the terms of the GNU General Public License v3.0." << endl << endl;
+    cout << "Copyright (C) 2024 BlazeSnow.保留所有权利。" << endl;
+    cout << "本程序以GNU General Public License v3.0的条款发布。" << endl << endl;
     cout << "https://github.com/BlazeSnow/astar-pathfinding" << endl << endl;
     //引入地图类
     MAP map;
@@ -214,15 +215,15 @@ int main() {
         }
         //如果找了超过地图的数量
         if (times > hang * lie * 4) {
-            cout << "More than " << hang * lie * 4 << " times" << endl;
+            cout << "找了超过" << hang * lie * 4 << "次" << endl;
             break;
         }
     }
     //如果找到了
     if (find) {
         //输出
-        cout << "Found the destination." << endl;
-        cout << "From front to back:" << endl;
+        cout << "找到终点了" << endl;
+        cout << "从前往后为：" << endl;
         //存放路径的栈
         stack<A *> show;
         //存放路径点的数组，用于地图输出
@@ -261,7 +262,7 @@ int main() {
             cout << endl;
         }
     } else {
-        cout << "No destination found" << endl;
+        cout << "没找到终点" << endl;
     }
     system("pause");
     return 0;
