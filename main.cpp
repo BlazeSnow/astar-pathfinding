@@ -1,12 +1,15 @@
-//Copyright (C) 2024 BlazeSnow
+﻿//Copyright (C) 2024 BlazeSnow
 //保留所有权利
 //本程序以GNU General Public License v3.0的条款发布
+//SetConsoleOutputCP(CP_UTF8);
+//SetConsoleOutputCP(54936);
 #include <iostream>
 #include <vector>
 #include <cstring>
 #include <stack>
 #include <fstream>
 #include <filesystem>
+#include <windows.h>
 
 using namespace std;
 //地图大小
@@ -133,8 +136,11 @@ A *newA(const int lienum, const int hangnum) {
 }
 
 int main() {
+    //SetConsoleOutputCP(CP_UTF8);
+    SetConsoleOutputCP(54936);
     cout << "Copyright (C) 2024 BlazeSnow.保留所有权利。" << endl;
-    cout << "本程序以GNU General Public License v3.0的条款发布。" << endl << endl;
+    cout << "本程序以GNU General Public License v3.0的条款发布。" << endl;
+    cout << "当前程序版本号：v1.4.1" << endl;
     cout << "https://github.com/BlazeSnow/astar-pathfinding" << endl << endl;
     //引入地图类
     MAP map;
