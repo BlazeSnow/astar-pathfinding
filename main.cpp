@@ -197,11 +197,6 @@ int main() {
                 pChild->parent = pCurrent;
                 //写入待处理列表
                 list.push_back(pChild);
-                delete pChild;
-            } else {
-                //标记为已找过
-                pathMap[pChild->lienum][pChild->hangnum] = 1;
-                delete pChild;
             }
             times++;
         }
