@@ -137,7 +137,7 @@ int main() {
     SetConsoleOutputCP(54936);
     cout << "Copyright (C) 2024 BlazeSnow.保留所有权利。" << endl;
     cout << "本程序以GNU General Public License v3.0的条款发布。" << endl;
-    cout << "当前程序版本号：v1.4.2" << endl;
+    cout << "当前程序版本号：v1.5.0" << endl;
     cout << "https://github.com/BlazeSnow/astar-pathfinding" << endl << endl;
     //引入地图类
     MAP map;
