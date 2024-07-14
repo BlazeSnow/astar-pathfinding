@@ -72,8 +72,7 @@ public:
                 cout << "文件读取成功" << endl;
                 return 1;
             } else {
-                std::filesystem::path path = std::filesystem::current_path();
-                cout << "ERROR:文件打开失败，目录为：" << path << endl;
+                cout << "ERROR:文件打开失败，目录为：" << std::filesystem::current_path() << endl;
                 return 0;
             }
         } //输出地图文件
@@ -87,14 +86,12 @@ public:
                     }
                     file << endl;
                 }
-                //输出路径
-                std::filesystem::path path = std::filesystem::current_path();
                 file.close();
-                cout << "文件map.txt创建成功，目录为：" << path << endl;
+                //输出路径
+                cout << "文件map.txt创建成功，目录为：" << std::filesystem::current_path() << endl;
                 return 0;
             } else {
-                std::filesystem::path path = std::filesystem::current_path();
-                cout << "ERROR:文件创建失败，目录为：" << path << endl;
+                cout << "ERROR:文件创建失败，目录为：" << std::filesystem::current_path() << endl;
                 return 0;
             }
         } else {
@@ -189,7 +186,7 @@ int main() {
             pChild->g++;
             //如果没越界，没障碍并且没找过
             if (pChild->lienum >= 0 && pChild->lienum <= lie && pChild->hangnum >= 0 && pChild->hangnum <= hang &&
-                map.map[pChild->lienum][pChild->hangnum] != 1 && pathMap[pChild->lienum][pChild->hangnum] != 1) {
+                map.map[pChild->lienum][pChild->hangnum] != 1 && pathMap[pChild->lienum][pChild->hangnum] == 0) {
                 //标记为已找过
                 pathMap[pChild->lienum][pChild->hangnum] = 1;
                 //计算H的值
