@@ -1,4 +1,6 @@
-#clion
 .idea/
 cmake-build-debug/
-cmake-build-release/
+
+.vs/
+out/
+CMakeSettings.json
