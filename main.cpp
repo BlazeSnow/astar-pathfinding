@@ -180,13 +180,13 @@ int main() {
                     pChild->hangnum++;
                     break;
                 default:
-                    abort();
+                    exit(1);
             }
             //G的值加1
             pChild->g++;
             //如果没越界，没障碍并且没找过
             if (pChild->lienum >= 0 && pChild->lienum <= lie && pChild->hangnum >= 0 && pChild->hangnum <= hang &&
-                map.map[pChild->lienum][pChild->hangnum] != 1 && pathMap[pChild->lienum][pChild->hangnum] == 0) {
+                map.map[pChild->lienum][pChild->hangnum] != 1 && pathMap[pChild->lienum][pChild->hangnum] != 1) {
                 //标记为已找过
                 pathMap[pChild->lienum][pChild->hangnum] = 1;
                 //计算H的值
@@ -197,6 +197,11 @@ int main() {
                 pChild->parent = pCurrent;
                 //写入待处理列表
                 list.push_back(pChild);
+                delete pChild;
+            } else {
+                //标记为已找过
+                pathMap[pChild->lienum][pChild->hangnum] = 1;
+                delete pChild;
             }
             times++;
         }
