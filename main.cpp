@@ -27,18 +27,18 @@ public:
 	//估算代价
 	int h;
 	//A的父
-	A *parent;
+	A* parent;
 };
 
 //地图类
 class MAP {
 public:
 	//地图存放
-	int map[lie][hang] = {0};
+	int map[lie][hang] = { 0 };
 	//起点
-	A start{1, 1};
+	A start{ 1, 1 };
 	//终点
-	A end{6, 8};
+	A end{ 6, 8 };
 
 	//输入地图，返回1则读取完地图，返回0终止整个程序
 	int inputMap() {
@@ -68,7 +68,8 @@ public:
 				file.close();
 				cout << "文件读取成功" << endl;
 				return 1;
-			} else {
+			}
+			else {
 				cout << "ERROR:文件打开失败，目录为：" << std::filesystem::current_path() << endl;
 				return 0;
 			}
@@ -77,8 +78,8 @@ public:
 			fstream file("map.txt", ios::out);
 			if (file.is_open()) {
 				//输出地图
-				for (const auto &i: templateMap) {
-					for (int j: i) {
+				for (const auto& i : templateMap) {
+					for (int j : i) {
 						file << j << " ";
 					}
 					file << endl;
@@ -87,25 +88,27 @@ public:
 				//输出路径
 				cout << "文件map.txt创建成功，目录为：" << std::filesystem::current_path() << endl;
 				return 0;
-			} else {
+			}
+			else {
 				cout << "ERROR:文件创建失败，目录为：" << std::filesystem::current_path() << endl;
 				return 0;
 			}
-		} else {
+		}
+		else {
 			cout << "ERROR:输入不合法，请重新开始程序" << endl;
 			return 0;
 		}
 	};
 private:
 	//地图信息
-	const int templateMap[lie][hang] = {{1, 1, 0, 0, 0, 1, 0, 0, 0, 0},
-	                                    {1, 2, 0, 0, 0, 1, 0, 0, 0, 0},
-	                                    {1, 1, 0, 1, 0, 1, 1, 0, 0, 0},
-	                                    {1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
-	                                    {0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
-	                                    {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
-	                                    {0, 0, 0, 0, 0, 0, 0, 0, 3, 0},
-	                                    {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},};
+	const int templateMap[lie][hang] = { {1, 1, 0, 0, 0, 1, 0, 0, 0, 0},
+										{1, 2, 0, 0, 0, 1, 0, 0, 0, 0},
+										{1, 1, 0, 1, 0, 1, 1, 0, 0, 0},
+										{1, 1, 0, 1, 0, 1, 1, 1, 1, 1},
+										{0, 0, 0, 0, 1, 1, 0, 0, 0, 0},
+										{0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+										{0, 0, 0, 0, 0, 0, 0, 0, 3, 0},
+										{0, 0, 0, 0, 0, 1, 0, 0, 0, 0}, };
 };
 
 //计算某点的H值
@@ -121,8 +124,8 @@ enum direction {
 };
 
 //将A*指针扩容
-A *newA(const int lienum, const int hangnum) {
-	A *p = new A;
+A* newA(const int lienum, const int hangnum) {
+	A* p = new A;
 	memset(p, 0, sizeof(A));
 	p->lienum = lienum;
 	p->hangnum = hangnum;
@@ -130,10 +133,10 @@ A *newA(const int lienum, const int hangnum) {
 }
 
 int main() {
-	system("chcp 65001");
+	system("chcp 54936");
 	cout << "Copyright (C) 2024 BlazeSnow.保留所有权利。" << endl;
 	cout << "本程序以GNU General Public License v3.0的条款发布。" << endl;
-	cout << "当前程序版本号：v1.5.2" << endl;
+	cout << "当前程序版本号：v1.5.3" << endl;
 	cout << "https://github.com/BlazeSnow/astar-pathfinding" << endl << endl;
 	//引入地图类
 	MAP map;
@@ -145,44 +148,44 @@ int main() {
 	//是否找到
 	bool find = false;
 	//是否找过
-	int pathMap[lie][hang] = {0};
+	int pathMap[lie][hang] = { 0 };
 	//找了几次
 	int times = 0;
 	//开始位置的A
-	A *pCurrent = newA(map.start.lienum, map.start.hangnum);
+	A* pCurrent = newA(map.start.lienum, map.start.hangnum);
 	//开始位置标记找过
 	pathMap[pCurrent->lienum][pCurrent->hangnum] = 1;
 	//队列存储A
-	vector<A *> list;
+	vector<A*> list;
 	//主程序
 	while (true) {
 		for (int i = 0; i < 4; i++) {
 			//新建一个指针
-			A *pChild = newA(pCurrent->lienum, pCurrent->hangnum);
+			A* pChild = newA(pCurrent->lienum, pCurrent->hangnum);
 			//保留G的值
 			pChild->g = pCurrent->g;
 			//根据四个方向调整坐标
 			switch (i) {
-				case you:
-					pChild->lienum++;
-					break;
-				case zuo:
-					pChild->lienum--;
-					break;
-				case shang:
-					pChild->hangnum--;
-					break;
-				case xia:
-					pChild->hangnum++;
-					break;
-				default:
-					exit(1);
+			case you:
+				pChild->lienum++;
+				break;
+			case zuo:
+				pChild->lienum--;
+				break;
+			case shang:
+				pChild->hangnum--;
+				break;
+			case xia:
+				pChild->hangnum++;
+				break;
+			default:
+				exit(1);
 			}
 			//G的值加1
 			pChild->g++;
 			//如果没越界，没障碍并且没找过
 			if (pChild->lienum >= 0 && pChild->lienum <= lie && pChild->hangnum >= 0 && pChild->hangnum <= hang &&
-			    map.map[pChild->lienum][pChild->hangnum] != 1 && pathMap[pChild->lienum][pChild->hangnum] != 1) {
+				map.map[pChild->lienum][pChild->hangnum] != 1 && pathMap[pChild->lienum][pChild->hangnum] != 1) {
 				//标记为已找过
 				pathMap[pChild->lienum][pChild->hangnum] = 1;
 				//计算H的值
@@ -224,9 +227,9 @@ int main() {
 		cout << "找到终点了" << endl;
 		cout << "从前往后为：" << endl;
 		//存放路径的栈
-		stack<A *> show;
+		stack<A*> show;
 		//存放路径点的数组，用于地图输出
-		vector<A *> show_on_map;
+		vector<A*> show_on_map;
 		//输出路径到栈和数组
 		while (pCurrent) {
 			auto temp = newA(pCurrent->hangnum, pCurrent->lienum);
@@ -247,20 +250,22 @@ int main() {
 			for (int j = 0; j < hang; j++) {
 				//判断保存路径的数组中的点的位置
 				bool panduan = false;
-				for (auto k: show_on_map) {
+				for (auto k : show_on_map) {
 					if (k->lienum == j && k->hangnum == i) {
 						panduan = true;
 					}
 				}
 				if (panduan) {
 					cout << " a" << map.map[i][j] << " ";
-				} else {
+				}
+				else {
 					cout << "  " << map.map[i][j] << " ";
 				}
 			}
 			cout << endl;
 		}
-	} else {
+	}
+	else {
 		cout << "没找到终点" << endl;
 	}
 	system("pause");
