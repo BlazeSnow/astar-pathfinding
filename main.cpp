@@ -6,9 +6,17 @@
 #include <vector>
 
 using namespace std;
+
+const filesystem::path CurrentPath = filesystem::current_path();
+const string CurrentPathString = CurrentPath.string();
+
 // 地图大小
 #define hang 10
 #define lie 8
+
+enum { OutputFile, ReadFile };
+
+int ChooseMode = -1;
 
 // 结构体A
 class A {
@@ -40,11 +48,21 @@ public:
     // 输入地图，返回1则读取完地图，返回0终止整个程序
     int inputMap() {
         // 判断输入或者输出文件
-        int in_or_out = -1;
-        cout << "需要读取地图文件(1)或生成全新的地图文件(0)：" << endl;
-        cin >> in_or_out;
+        printf("需要读取地图文件(1)或生成全新的地图文件(0)：\n");
+        while (true) {
+            ChooseMode = getchar() - '0';
+            int temp;
+            if (ChooseMode == 0 || ChooseMode == 1) {
+                while ((temp = getchar()) != '\n' && temp != EOF) {
+                };
+                break;
+            }
+            while ((temp = getchar()) != '\n' && temp != EOF) {
+            };
+            fprintf(stderr, "错误：输入内容不合法。\n");
+        }
         // 读取地图文件
-        if (in_or_out == 1) {
+        if (ChooseMode == ReadFile) {
             fstream file("astar-pathfinding.txt", ios::in);
             if (file.is_open()) {
                 // 读取
@@ -63,15 +81,15 @@ public:
                     }
                 }
                 file.close();
-                cout << "文件读取成功" << endl;
+                printf("文件astar-pathfinding.txt读取成功\n");
                 return 1;
             } else {
-                cout << "ERROR:文件打开失败，目录为："
-                        << std::filesystem::current_path() << endl;
-                return 0;
+                fprintf(stderr, "ERROR:文件打开失败\n");
+                fprintf(stderr, "目录为：%s\n", CurrentPathString.c_str());
+                exit(-1);
             }
         } // 输出地图文件
-        else if (in_or_out == 0) {
+        else if (ChooseMode == OutputFile) {
             fstream file("astar-pathfinding.txt", ios::out);
             if (file.is_open()) {
                 // 输出地图
@@ -83,18 +101,16 @@ public:
                 }
                 file.close();
                 // 输出路径
-                cout << "文件astar-pathfinding.txt创建成功，目录为："
-                        << std::filesystem::current_path() << endl;
+                printf("文件astar-pathfinding.txt创建成功\n");
+                printf("目录为：%s\n", CurrentPathString.c_str());
                 return 0;
             } else {
-                cout << "ERROR:文件创建失败，目录为："
-                        << std::filesystem::current_path() << endl;
-                return 0;
+                fprintf(stderr, "ERROR:文件创建失败\n");
+                fprintf(stderr, "目录为：%s\n", CurrentPathString.c_str());
+                exit(-1);
             }
-        } else {
-            cout << "ERROR:输入不合法，请重新开始程序" << endl;
-            return 0;
         }
+        exit(-1);
     };
 
 private:
@@ -129,9 +145,9 @@ A *newA(const int lienum, const int hangnum) {
 int main() {
     system("chcp 65001");
     system("cls");
-    cout << "Copyright (C) 2024-2025 BlazeSnow. 保留所有权利。" << endl;
-    cout << "当前程序版本号：v1.5.4" << endl;
-    cout << "https://github.com/BlazeSnow/astar-pathfinding" << endl << endl;
+    printf("Copyright (C) 2024-2025 BlazeSnow. 保留所有权利。\n");
+    printf("当前程序版本号：v1.5.5\n");
+    printf("https://github.com/BlazeSnow/astar-pathfinding\n\n");
     // 引入地图类
     MAP map;
     // 如果地图类主程序返回0代表程序结束
@@ -214,15 +230,15 @@ int main() {
         }
         // 如果找了超过地图的数量
         if (times > hang * lie * 4) {
-            cout << "找了超过" << hang * lie * 4 << "次" << endl;
+            printf("找了超过%d次。\n",hang * lie * 4);
             break;
         }
     }
     // 如果找到了
     if (find) {
         // 输出
-        cout << "找到终点了" << endl;
-        cout << "从前往后为：" << endl;
+        printf("找到终点了\n");
+        printf("从前往后为：\n");
         // 存放路径的栈
         stack<A *> show;
         // 存放路径点的数组，用于地图输出
@@ -239,9 +255,9 @@ int main() {
         while (!show.empty()) {
             auto temp = show.top();
             show.pop();
-            cout << "(" << temp->hangnum << "," << temp->lienum << ") ";
+            printf("(%d,%d)", temp->hangnum, temp->lienum);
         }
-        cout << endl;
+        printf("\n");
         // 输出地图
         for (int i = 0; i < lie; i++) {
             for (int j = 0; j < hang; j++) {
@@ -253,15 +269,15 @@ int main() {
                     }
                 }
                 if (panduan) {
-                    cout << " a" << map.map[i][j] << " ";
+                    printf(" a%d ", map.map[i][j]);
                 } else {
-                    cout << "  " << map.map[i][j] << " ";
+                    printf("  %d ", map.map[i][j]);
                 }
             }
-            cout << endl;
+            printf("\n");
         }
     } else {
-        cout << "没找到终点" << endl;
+        fprintf(stderr, "没找到终点\n");
     }
     system("pause");
     return 0;
