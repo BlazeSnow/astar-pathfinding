@@ -1,1 +1,0 @@
-clang++.exe -std=c++20 main.cpp -o astar-pathfinding.exe

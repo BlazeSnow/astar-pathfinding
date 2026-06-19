@@ -1,5 +1,7 @@
 # A星寻路
 
+> 此项目已迁移至 [CppWorkspace](https://github.com/BlazeSnow/CppWorkspace/tree/main/AstarPathfinding)
+
 1. 此程序用于**A星寻路**
 2. 此程序可以**自定义地图**
 3. 需要自定义地图请在输出的目录中找到```astar-pathfinding.txt```并修改
