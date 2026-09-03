@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-latest, macos-26-intel, windows-latest, windows-11-arm ]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: BlazeSnow/release-cpp-action@main
+      with:
+        name: astar-pathfinding
+        base-dir: .
+        release: true
+        release-body: https://github.com/BlazeSnow/astar-pathfinding/blob/main/CHANGELOG.md
+        release-name: ${{ github.ref_name }}
+        prerelease: ${{ contains(github.ref_name, '-') }}
+        tag: ${{ github.ref_name }}
