@@ -150,9 +150,8 @@ int main() {
 #endif
 
     clearConsole();
-    printf("Copyright (C) 2024-2026 BlazeSnow. 保留所有权利。\n");
-    printf("当前程序版本号：v1.5.5\n");
-    printf("https://github.com/BlazeSnow/CppWorkspace\n\n");
+    printf("Copyright (C) 2024-2026 BlazeSnow.\n");
+    printf("https://github.com/BlazeSnow/astar-pathfinding\n\n");
     // 引入地图类
     MAP map;
     // 如果地图类主程序返回0代表程序结束
