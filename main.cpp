@@ -12,7 +12,7 @@ using namespace std;
 
 // 结构体A
 class A {
-  public:
+public:
     // 列位置
     int lienum;
     // 行位置
@@ -29,7 +29,7 @@ class A {
 
 // 地图类
 class MAP {
-  public:
+public:
     // 地图存放
     int map[lie][hang] = {0};
     // 起点
@@ -74,8 +74,8 @@ class MAP {
             fstream file("astar-pathfinding.txt", ios::out);
             if (file.is_open()) {
                 // 输出地图
-                for (const auto &i : templateMap) {
-                    for (int j : i) {
+                for (const auto &i: templateMap) {
+                    for (int j: i) {
                         file << j << " ";
                     }
                     file << endl;
@@ -95,7 +95,7 @@ class MAP {
         }
     };
 
-  private:
+private:
     // 地图信息
     const int templateMap[lie][hang] = {
         {1, 1, 0, 0, 0, 1, 0, 0, 0, 0}, {1, 2, 0, 0, 0, 1, 0, 0, 0, 0}, {1, 1, 0, 1, 0, 1, 1, 0, 0, 0},
@@ -157,20 +157,20 @@ int main() {
             pChild->g = pCurrent->g;
             // 根据四个方向调整坐标
             switch (i) {
-            case you:
-                pChild->lienum++;
-                break;
-            case zuo:
-                pChild->lienum--;
-                break;
-            case shang:
-                pChild->hangnum--;
-                break;
-            case xia:
-                pChild->hangnum++;
-                break;
-            default:
-                exit(1);
+                case you:
+                    pChild->lienum++;
+                    break;
+                case zuo:
+                    pChild->lienum--;
+                    break;
+                case shang:
+                    pChild->hangnum--;
+                    break;
+                case xia:
+                    pChild->hangnum++;
+                    break;
+                default:
+                    exit(1);
             }
             // G的值加1
             pChild->g++;
@@ -241,7 +241,7 @@ int main() {
             for (int j = 0; j < hang; j++) {
                 // 判断保存路径的数组中的点的位置
                 bool panduan = false;
-                for (auto k : show_on_map) {
+                for (auto k: show_on_map) {
                     if (k->lienum == j && k->hangnum == i) {
                         panduan = true;
                     }
