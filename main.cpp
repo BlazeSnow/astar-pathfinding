@@ -5,10 +5,30 @@
 #include <stack>
 #include <vector>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 using namespace std;
 // 地图大小
 #define hang 10
 #define lie 8
+
+void clearConsole() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void enterToContinue() {
+    printf("按回车键继续...");
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {
+    }
+    getchar();
+}
 
 // 结构体A
 class A {
@@ -124,8 +144,12 @@ A *newA(const int lienum, const int hangnum) {
 }
 
 int main() {
-    system("chcp 65001");
-    system("cls");
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+#endif
+
+    clearConsole();
     printf("Copyright (C) 2024-2026 BlazeSnow. 保留所有权利。\n");
     printf("当前程序版本号：v1.5.5\n");
     printf("https://github.com/BlazeSnow/CppWorkspace\n\n");
@@ -133,7 +157,7 @@ int main() {
     MAP map;
     // 如果地图类主程序返回0代表程序结束
     if (map.inputMap() == 0) {
-        system("pause");
+        enterToContinue();
         return 0;
     }
     // 是否找到
@@ -257,6 +281,6 @@ int main() {
     } else {
         printf("没找到终点\n");
     }
-    system("pause");
+    enterToContinue();
     return 0;
 }
